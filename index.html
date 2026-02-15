@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Lunar/Chinese New Year Phrase Generator</title>
+    <style>
+        body {
+            background-color: #c6070c;
+            color: #ffe392;
+            font-family: 'Lato', Helvetica, Arial, 'ヒラギノ角ゴシック体 GB W6',
+                Hiragino Sans GB W6, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック',
+                'MS PGothic', sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        table {
+            margin: auto;
+            width: 30%;
+        }
+        .pinyin {
+            height: 20px;
+            font-size: 1.1em;
+            letter-spacing: 3px;
+            font-weight: 400;
+        }
+        td {
+            font-size: 8em;
+            text-align: center;
+            font-weight: 700;
+            padding: 0px;
+        }
+        h2 {
+            margin-top: 15px;
+            margin-bottom: 100px;
+            font-size: 3em;
+            text-transform: uppercase;
+            font-weight: 700;
+            word-spacing: 5px;
+        }
+        p {
+            font-weight: 700;
+            letter-spacing: 1px;
+            word-spacing: 2px;
+        }
+        button {
+            background-color: #ef941a;
+            color: #fffbe2;
+            width: 213px;
+            position: relative;
+            border-radius: 5px;
+            margin: 0;
+            padding: 0;
+            line-height: 0.5;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        button:hover,
+        button:focus {
+            background-color: #efa134;
+        }
+        button:active {
+            transform: translate(0px, 2px);
+            -webkit-transform: translate(0px, 2px);
+        }
+        input[type="text"] {
+            width: 213px;
+            height:30px;
+            padding: 10px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 2px solid #ef941a;
+            outline: none;
+        }
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="content-section">
+        <table>
+            <tr>
+                <th class="pinyin" id="pinyin1">xīn</th>
+                <th class="pinyin" id="pinyin2">nián</th>
+                <th class="pinyin" id="pinyin3">kuài</th>
+                <th class="pinyin" id="pinyin4">lè</th>
+            </tr>
+            <tr>
+                <td id="phraseChinese1">新</td>
+                <td id="phraseChinese2">年</td>
+                <td id="phraseChinese3">快</td>
+                <td id="phraseChinese4">樂</td>
+            </tr>
+        </table>
+        <h2 id="phraseE">(Happy new year)</h2>
+        <input type="text" id="nameInput" placeholder="输入名字获取专属祝福哦" />
+        <button type="button" id="button"><p>祝福来</p></button>
+    </div>
+    <script>
+        var pinyin1 = document.getElementById('pinyin1');
+        var pinyin2 = document.getElementById('pinyin2');
+        var pinyin3 = document.getElementById('pinyin3');
+        var pinyin4 = document.getElementById('pinyin4');
+        var phraseChinese1 = document.getElementById('phraseChinese1');
+        var phraseChinese2 = document.getElementById('phraseChinese2');
+        var phraseChinese3 = document.getElementById('phraseChinese3');
+        var phraseChinese4 = document.getElementById('phraseChinese4');
+        var phraseE = document.getElementById('phraseE');
+        var nameInput = document.getElementById('nameInput');
+        var button = document.getElementById('button');
+
+        // 定义姓氏和对应的祝福语
+        var surnames = {
+            "何": ["何家欢乐愿你在新的一年 “何” 家欢乐，家庭和睦温馨，与家人相处融洽，共享天伦之乐，生活甜蜜美满！", "何乐无穷新的一年，愿你 “何” 乐无穷，每一天都能沉浸在无尽的快乐之中，生活充满欢笑与惊喜！"],
+            "张": ["张程似锦愿你在新的一年里，“张” 程似锦，所有的计划与憧憬都能顺利展开，未来之路繁花相送，每一步都迈向成功与辉煌！"],
+            "郑": ["郑步青云愿你在新的一年里事业顺遂，步步高升，似“郑”步青云，未来可期！","郑财广进愿新的一年里“郑”财广进，财源滚滚，事业有成，收入不断增加，生活更加美好！"],
+            "百": ["新年快樂新的一年，愿小百亿健康无忧，活力满满，在阳光下肆意奔跑，在草地上快乐打滚！",'新年快樂愿小百亿开开心心，尾巴摇得像螺旋桨，一直做易兰芳最治愈的小天使！'],
+            "易": ["易帆风顺新岁已至，愿你 “易” 帆风顺，在新的一年里，无论是生活还是事业，都能一路顺畅，没有阻碍，轻松抵达成功的彼岸！",'易气风发愿你在新的一年里 “易” 气风发，精神饱满，充满活力，以积极向上的态度迎接生活的每一个挑战，展现出独特的风采','易路繁花新的一年，祝你 “易” 路繁花，人生之路处处都有美好的风景相伴，每一步都能收获惊喜与快乐，生活丰富多彩。'],
+            "李": ["李想成真新的一年，愿你 “李” 想成真，所有的梦想都能如璀璨星辰般照亮现实，顺利达成目标，收获满满幸福。！", "李遇皆福祝你在新岁里 “李” 遇皆福，所遇之人皆友善，所遇之事皆顺遂，福气满满，生活充满温馨与欢乐！"],
+            "王": ["王运亨通祝你在新的一年 “王”运亨通，好运如同源源不断的溪流，围绕在你身边，干啥都顺利", "王气冲天新的一年，愿你 “王”气冲天，精神饱满，气势如虹，在各个方面都能展现出强大的能量，收获成功！"],
+            "赵": ["赵气蓬勃新的一年，愿你 “赵” 气蓬勃，活力满满！", "赵吉纳祥愿你在新的一年 “赵” 吉纳祥，所有的好运都纷至沓来！"],
+            "刘": ["刘金满钵新岁已至，祝你 “刘” 金满钵，财运亨通，财富如泉水般源源不断！", "刘光溢彩新的一年，愿你 “刘” 光溢彩，生活绚丽多姿，在各个方面都能绽放出独特的光芒，收获满满成就！"],
+            "陈": ["陈心如意新的一年，祝你 “陈” 心如意，无论是生活、工作还是情感，都能按照自己的心意发展，梦想成真！", "陈风得意祝你新岁 “陈” 风得意，生活中处处有惊喜，事事都顺心，如沐春风般惬意自在！"],
+            "范": ["范事顺遂新的一年，愿你 “范” 事顺遂，生活里的每一件事都能如你所愿，进展顺利，没有烦恼和波折！","范星高照祝你在新岁里 “范” 星高照，仿佛有幸运之星时刻照耀着你，无论做什么都能得到好运的眷顾，事事顺心!"],
+            "程": ["程风破浪新岁伊始，愿你 “程” 风破浪，在新的一年里勇往直前，冲破一切艰难险阻，在事业和生活中都能取得辉煌成！","程心如意祝你在新的一年 “程” 心如意，所有的愿望都能心想事成，生活处处皆顺遂，每一天都充满阳光与欢笑"],
+            "其他": ["新年快乐", "万事如意"]
+        };
+
+        // 定义全名祝福语
+        var fullNamePhrases = {
+            "张三": "张三，愿你在新的一年里，事业蒸蒸日上，生活幸福美满！"
+        };
+
+        function generatePhrase() {
+            var name = nameInput.value.trim();
+            var surname = name ? name[0] : "其他"; // 默认为“其他”
+
+            // 检查是否输入了全名
+            var fullNamePhrase = fullNamePhrases[name];
+            if (fullNamePhrase) {
+                // 如果有匹配的全名祝福语，直接使用
+                var randomPhrase = fullNamePhrase;
+            } else {
+                // 否则根据姓氏选择祝福语
+                var phrases = surnames[surname] || surnames["其他"];
+                var randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            }
+
+            // 提取拼音
+            var pinyin = randomPhrase.split('').map(char => {
+                return char === '郑' ? 'zhèng' : char === '范' ? 'fàn' : char === '程' ? 'chéng' : char === '易' ? 'yì' : char === '何' ? 'hé' : char === '张' ? 'zhāng' : char === '李' ? 'lǐ' : char === '王' ? 'wáng' : char === '赵' ? 'zhào' : char === '刘' ? 'liú' : char === '陈' ? 'chén' : '';
+            }).join(' ');
+
+            // 更新页面内容
+            phraseChinese1.textContent = randomPhrase[0];
+            phraseChinese2.textContent = randomPhrase[1];
+            phraseChinese3.textContent = randomPhrase[2];
+            phraseChinese4.textContent = randomPhrase[3];
+            pinyin1.textContent = pinyin.split(' ')[0];
+            pinyin2.textContent = pinyin.split(' ')[1];
+            pinyin3.textContent = pinyin.split(' ')[2];
+            pinyin4.textContent = pinyin.split(' ')[3];
+            phraseE.textContent = `${randomPhrase.slice(4)}`;
+        }
+
+        button.addEventListener('click', generatePhrase);
+    </script>
+</body>
+</html>
